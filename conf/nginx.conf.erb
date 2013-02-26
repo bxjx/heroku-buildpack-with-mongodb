@@ -26,7 +26,7 @@ http {
     listen            <%= ENV['PORT'] %>;
     server_name       _;
 
-    root              /app/;
+    root              /app/web/;
     index             index.php index.html index.htm;
 
     # Some basic cache-control for static files to be sent to the browser
@@ -88,14 +88,27 @@ http {
     #  #   rewrite ^/feed/?$ http://feeds.feedburner.com/feedburner-feed-id last;
     #  # }
     #}
+    #
 
-    location ~ .*\.php$ {
-      try_files $uri =404;
+    location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|zip|tgz|gz|rar|bz2|pdf|txt|tar|wav|bmp|rtf|js|flv|swf|html|htm|svg)$ {
+      expires 30d;
+      access_log off;
+    }
+
+    location / {
+      try_files $uri /index.php$uri?$args;
+    }
+
+    location ~ "^(.+\.php)($|/)" {
+      fastcgi_split_path_info ^(.+\.php)(.*)$;
+
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+      fastcgi_param PATH_INFO $fastcgi_path_info;
+      fastcgi_pass unix:/var/run/php5-fpm.sock;
       limit_conn phplimit 5; # limit to 5 concurrent users to PHP per IP.
       include         /app/vendor/nginx/conf/fastcgi_params;
-      fastcgi_param   HTTPS on; # force SSL
       fastcgi_pass    php_fpm;
-      fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
   }
 }
