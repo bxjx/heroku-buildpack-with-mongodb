@@ -128,6 +128,18 @@ pushd newrelic-php5-${NEWRELIC_VERSION}-linux
 cp -f agent/x64/newrelic-`phpize --version | grep "Zend Module Api No" | tr -d ' ' | cut -f 2 -d ':'`.so `php-config --extension-dir`/newrelic.so
 popd
 
+echo "+ Install mongo..."
+git clone git://github.com/mongodb/mongo-php-driver.git
+pushd mongo-php-driver
+phpize
+./configure
+make
+echo "looking for #{`find . | grep .so`}"
+cp -f mongo.so `php-config --extension-dir`/mongo.so
+popd
+
+
+
 echo "+ Packaging PHP..."
 # package PHP
 echo ${PHP_VERSION} > /app/vendor/php/VERSION
