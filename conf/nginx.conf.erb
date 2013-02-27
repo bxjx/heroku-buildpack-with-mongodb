@@ -105,7 +105,6 @@ http {
       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
       fastcgi_param SCRIPT_NAME $fastcgi_script_name;
       fastcgi_param PATH_INFO $fastcgi_path_info;
-      fastcgi_pass unix:/var/run/php5-fpm.sock;
       limit_conn phplimit 5; # limit to 5 concurrent users to PHP per IP.
       include         /app/vendor/nginx/conf/fastcgi_params;
       fastcgi_pass    php_fpm;

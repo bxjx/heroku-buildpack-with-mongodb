@@ -50,7 +50,7 @@ OUTPUT=`md5sum ${BUNDLE_DIR}/${TARGET} | cut -d ' ' -f 1`
 
 function download_url() {
 TARGET_URL="$1"
-curl -s -S -O -L -m 300 --connect-timeout 60 "$TARGET_URL"
+curl -s -S -O -L -m 6000 --connect-timeout 60 "$TARGET_URL"
 }
 
 BIN_DIR=$(dirname $0)
@@ -63,6 +63,7 @@ export COMPOSER_HOME="${CACHE_DIR}/.composer"
 # include .files when moving things around
 shopt -s dotglob
 
+echo "creating build dir ${BUILD_DIR}/local"
 mkdir -p $BUILD_DIR $CACHE_DIR ${BUNDLE_DIR} ${BUILD_DIR}/local ${BUILD_DIR}/vendor/bin ${COMPOSER_HOME}
 
 pushd ${BUNDLE_DIR} > /dev/null
@@ -155,7 +156,7 @@ tar xzf ${PHP_FILE} -C ${BUILD_DIR}/vendor/php
 # create extension dir for php
 if [ ! -f "${BUILD_DIR}/vendor/php/ext" ]
 then
-    mkdir ${BUILD_DIR}/vendor/php/ext
+    mkdir -p ${BUILD_DIR}/vendor/php/ext
 fi
 
 # copy mongo.so
@@ -210,7 +211,7 @@ cp ${BUILD_DIR}/vendor/php/php/fpm/status.html ${BUILD_DIR}/status.html
 cp $LP_DIR/conf/php.ini ${BUILD_DIR}/vendor/php/php.ini
 cp -a $LP_DIR/conf/etc.d ${BUILD_DIR}/vendor/php/
 cp $LP_DIR/conf/nginx.conf.erb ${BUILD_DIR}/vendor/nginx/conf/nginx.conf.erb
-#erb $LP_DIR/conf/nginx.conf.erb > ${BUILD_DIR}/vendor/nginx/conf/nginx.conf
+erb $LP_DIR/conf/nginx.conf.erb > ${BUILD_DIR}/vendor/nginx/conf/nginx.conf
 
 echo "-----> Installing boot script"
 cd $BUILD_DIR
