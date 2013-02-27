@@ -134,8 +134,7 @@ pushd mongo-php-driver
 phpize
 ./configure
 make
-echo "looking for #{`find . | grep .so`}"
-cp -f mongo.so `php-config --extension-dir`/mongo.so
+cp -f ./modules/mongo.so `php-config --extension-dir`/mongo.so
 popd
 
 
