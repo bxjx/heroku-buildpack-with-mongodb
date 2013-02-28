@@ -244,9 +244,9 @@ fi
 # Set correct port variable.
 erb /app/vendor/nginx/conf/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
 # Set NEWRELIC key
-if [ -x "/app/local/bin/newrelic-license" ]; then
-	sed -i.bak "s/REPLACE_WITH_REAL_KEY/\${NEW_RELIC_LICENSE_KEY}/g" /app/local/etc/newrelic.cfg
-fi
+echo "About to replace newrelic.cfg with \${NEW_RELIC_LICENSE_KEY}"
+sed -i.bak "s/REPLACE_WITH_REAL_KEY/\${NEW_RELIC_LICENSE_KEY}/g" /app/local/etc/newrelic.cfg
+cat /app/local/etc/newrelic.cfg
 
 # Expose Heroku config vars to PHP-FPM processes
 for var in \`env | cut -f1 -d=\`; do
