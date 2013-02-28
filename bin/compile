@@ -245,7 +245,7 @@ fi
 erb /app/vendor/nginx/conf/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
 # Set NEWRELIC key
 if [ -x "/app/local/bin/newrelic-license" ]; then
-	/app/local/bin/newrelic-license
+	sed -i.bak "s/REPLACE_WITH_REAL_KEY/\${NEW_RELIC_LICENSE_KEY}/g" /app/local/etc/newrelic.cfg
 fi
 
 # Expose Heroku config vars to PHP-FPM processes
